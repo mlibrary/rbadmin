@@ -2,7 +2,7 @@ export RBENV_ROOT=/l/local/rbenv
 export PATH="$RBENV_ROOT/bin:$RBENV_ROOT/shims:${PATH}"
 export JAVA_HOME="/usr/lib/jvm/java-7-openjdk-amd64"
 
-CURRENT_JRUBY="jruby-1.7.20"
+CURRENT_JRUBY="jruby-1.7.20.1"
 CURRENT_CRUBY="2.2.2"
 #DEPLOYMENT_GROUP="htdev"
 
