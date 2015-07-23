@@ -97,6 +97,7 @@ rbenv global $CURRENT_CRUBY_UPSTREAM
 
 # remove outdated ruby versions
 for v in "${OUTDATED_CRUBIES[@]}" "${OUTDATED_JRUBIES[@]}"; do
+    echo "Removing $v"
     rbenv uninstall -f $v
 done
 
