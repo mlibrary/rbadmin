@@ -1,4 +1,4 @@
 export RBENV_ROOT=/l/local/rbenv
 export PATH="$RBENV_ROOT/bin:$RBENV_ROOT/shims:${PATH}"
 eval "$(rbenv init -)"
-export JAVA_HOME="/usr/lib/jvm/java-7-openjdk-amd64"
+export JAVA_HOME=`find /usr/lib/jvm -maxdepth 1 -mindepth 1 -type d | sort -r | head -1`

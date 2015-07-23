@@ -1,17 +1,21 @@
 export RBENV_ROOT=/l/local/rbenv
 export PATH="$RBENV_ROOT/bin:$RBENV_ROOT/shims:${PATH}"
-export JAVA_HOME="/usr/lib/jvm/java-7-openjdk-amd64"
 
-CURRENT_JRUBY="jruby-1.7.20.1"
-CURRENT_CRUBY="2.2.2"
-#DEPLOYMENT_GROUP="htdev"
+if [ -z "$JAVA_HOME" ]; then
+    export JAVA_HOME=`find /usr/lib/jvm -maxdepth 1 -mindepth 1 -type d | sort -r | head -1`
+fi
+
+if [ ! -d "$JAVA_HOME" ]; then
+    "Can't find JAVA_HOME"
+    exit 1
+fi
 
 function clone {
     if [ -d $1 ];
     then
-       echo "$1 already present"
+        echo "$1 already present"
     else
-       git clone $2
+        git clone $2
     fi
 }
 
@@ -32,32 +36,39 @@ function install_ruby {
     else
         rbenv install $1
         export RBENV_VERSION=$1
-	gem install bundler
+        gem install bundler
         gem install pry
         # ONLY DEV
-        pushd `dirname $0`/../lib/bundler
-        rm Gemfile.lock
-        bundle install
-        rm Gemfile.lock
-	unset RBENV_VERSION
+        # pushd `dirname $0`/../lib/bundler
+        # rm Gemfile.lock
+        # bundle install
+        # rm Gemfile.lock
+        unset RBENV_VERSION
     fi
 }
 
 function check_package {
-    dpkg -s $1 >/dev/null 2>&1
+    arr=($(echo $1 | tr " " "\n"))
 
-    if [ $? -ne 0 ];
-    then
-        echo "FAILURE $1 missing, install with 'aptutude install $1'"
-        exit 1
-    else
-        echo "OK $1 present"
-    fi
+    for p in ${arr[@]}
+    do
+        dpkg -s $p >/dev/null 2>&1
+
+        if [ $? -eq 0 ];
+        then
+            echo "OK $p found"
+            return
+        fi
+    done
+
+    echo "FAILURE, package not found: $1"
+    exit 1
 }
 
-check_package openjdk-7-jdk
+check_package "openjdk-8-jdk openjdk-7-jdk"
 check_package libssl-dev
 check_package libreadline-dev
+check_package "g++"
 
 # install rbenv
 pushd /l/local
@@ -76,11 +87,13 @@ popd
 # up to date?
 rbenv update
 
-# install ruby versions
-install_ruby $CURRENT_JRUBY
-install_ruby $CURRENT_CRUBY
+source `dirname $0`/../lib/lib.sh
 
-rbenv global $CURRENT_CRUBY
+# install ruby versions
+install_ruby $CURRENT_JRUBY_UPSTREAM
+install_ruby $CURRENT_CRUBY_UPSTREAM
+
+rbenv global $CURRENT_CRUBY_UPSTREAM
 
 # add uninstalls here
 #
