@@ -1,13 +1,8 @@
 export RBENV_ROOT=/l/local/rbenv
 export PATH="$RBENV_ROOT/bin:$RBENV_ROOT/shims:${PATH}"
 
-if [ -z "$JAVA_HOME" ]; then
-    export JAVA_HOME=`find /usr/lib/jvm -maxdepth 1 -mindepth 1 -type d | sort -r | head -1`
-fi
-
-if [ ! -d "$JAVA_HOME" ]; then
-    "Can't find JAVA_HOME"
-    exit 1
+if [ -f `dirname $0`/../config ]; then
+    . `dirname $0`/../config
 fi
 
 function clone {
@@ -65,7 +60,19 @@ function check_package {
     exit 1
 }
 
-check_package "openjdk-8-jdk openjdk-7-jdk"
+if [ ! $NO_JRUBY ]; then
+    if [ -z "$JAVA_HOME" ]; then
+        export JAVA_HOME=`find /usr/lib/jvm -maxdepth 1 -mindepth 1 -type d | sort -r | head -1`
+    fi
+
+    if [ ! -d "$JAVA_HOME" ]; then
+        "Can't find JAVA_HOME"
+        exit 1
+    fi
+
+    check_package "openjdk-8-jdk openjdk-7-jdk"
+fi
+
 check_package libssl-dev
 check_package libreadline-dev
 check_package "g++"
@@ -90,10 +97,20 @@ rbenv update
 source `dirname $0`/../lib/lib.sh
 
 # install ruby versions
-install_ruby $CURRENT_JRUBY_UPSTREAM
-install_ruby $CURRENT_CRUBY_UPSTREAM
 
-rbenv global $CURRENT_CRUBY_UPSTREAM
+if [ ! $NO_JRUBY ]; then
+    install_ruby $CURRENT_JRUBY_UPSTREAM
+fi
+
+if [ ! $NO_CRUBY ]; then
+    install_ruby $CURRENT_CRUBY_UPSTREAM
+fi
+
+if [ $DEFAULT_TO_JRUBY ]; then
+    rbenv global $CURRENT_JRUBY_UPSTREAM
+else
+    rbenv global $CURRENT_CRUBY_UPSTREAM
+fi
 
 # remove outdated ruby versions
 for v in "${OUTDATED_CRUBIES[@]}" "${OUTDATED_JRUBIES[@]}"; do

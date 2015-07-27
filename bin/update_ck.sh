@@ -13,5 +13,17 @@ function match_or_complain {
     fi
 }
 
-match_or_complain $CURRENT_CRUBY_UPSTREAM $CURRENT_CRUBY_INSTALLED
-match_or_complain $CURRENT_JRUBY_UPSTREAM $CURRENT_JRUBY_INSTALLED
+if [ -f `dirname $0`/../config ]; then
+    . `dirname $0`/../config
+fi
+
+if [ ! $NO_JRUBY ]; then
+    match_or_complain $CURRENT_JRUBY_UPSTREAM $CURRENT_JRUBY_INSTALLED
+fi
+
+if [ ! $NO_CRUBY ]; then
+    match_or_complain $CURRENT_CRUBY_UPSTREAM $CURRENT_CRUBY_INSTALLED
+fi
+
+
+
