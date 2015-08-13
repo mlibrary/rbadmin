@@ -5,7 +5,7 @@ source `dirname $0`/rbenv_profile
 rbenv rehash > /dev/null
 rbenv update > /dev/null
 
-source `dirname $0`/../lib/lib.sh
+source `dirname $0`/../lib/info.sh
 
 function match_or_complain {
     if [ "$1" != "$2" ]; then

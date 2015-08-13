@@ -1,5 +1,0 @@
-# duplicate this file and remove the extension to customize
-# all config flags are disables by default, uncommant them to enable
-#NO_JRUBY=1
-#NO_CRUBY=1
-#DEFAULT_TO_JRUBY=1

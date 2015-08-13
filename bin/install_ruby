@@ -1,17 +1,16 @@
-export RBENV_ROOT=/l/local/rbenv
+#!/bin/bash
+
+. `dirname $0`/../lib/system.sh
+
+set -e
+
+. `dirname $0`/../config
+export PREFIX="/l/local"
+export RBENV_ROOT="$PREFIX/rbenv"
 export PATH="$RBENV_ROOT/bin:$RBENV_ROOT/shims:${PATH}"
 
-if [ -f `dirname $0`/../config ]; then
-    . `dirname $0`/../config
-fi
-
 function clone {
-    if [ -d $1 ];
-    then
-        echo "$1 already present"
-    else
-        git clone $2
-    fi
+    [ -d $1 ] && [ "$(ls -A $1)" ] && echo "$1 already present" || git clone $2
 }
 
 function _mkdir {
@@ -62,23 +61,24 @@ function check_package {
 
 if [ ! $NO_JRUBY ]; then
     if [ -z "$JAVA_HOME" ]; then
-        export JAVA_HOME=`find /usr/lib/jvm -maxdepth 1 -mindepth 1 -type d | sort -r | head -1`
+        if [ "$OS" == "X" ];      then export JAVA_HOME=`/usr/libexec/java_home`; fi
+        if [ "$OS" == "Debian" ]; then export JAVA_HOME=`find /usr/lib/jvm -maxdepth 1 -mindepth 1 -type d | sort -r | head -1`; fi
     fi
 
     if [ ! -d "$JAVA_HOME" ]; then
         "Can't find JAVA_HOME"
         exit 1
     fi
-
-    check_package "openjdk-8-jdk openjdk-7-jdk"
 fi
 
-check_package libssl-dev
-check_package libreadline-dev
-check_package "g++"
+if [ "$OS" == "Debian" ]; then
+    check_package libssl-dev
+    check_package libreadline-dev
+    check_package "g++"
+fi
 
 # install rbenv
-pushd /l/local
+pushd $PREFIX
 clone rbenv https://github.com/sstephenson/rbenv.git
 
 # install plugins
@@ -94,7 +94,8 @@ popd
 # up to date?
 rbenv update
 
-source `dirname $0`/../lib/lib.sh
+source `dirname $0`/../lib/info.sh
+echo "not ded 2"
 
 # install ruby versions
 
