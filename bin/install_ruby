@@ -57,10 +57,8 @@ function check_package {
 }
 
 if [ ! $NO_JRUBY ]; then
-    if [ -z "$JAVA_HOME" ]; then
-        if [ "$OS" == "X" ];      then export JAVA_HOME=`/usr/libexec/java_home`; fi
-        if [ "$OS" == "Debian" ]; then export JAVA_HOME=`find /usr/lib/jvm -maxdepth 1 -mindepth 1 -type d | sort -r | head -1`; fi
-    fi
+    if [ "$OS" == "X" ];      then export JAVA_HOME=`/usr/libexec/java_home`; fi
+    if [ "$OS" == "Debian" ]; then export JAVA_HOME=`find /usr/lib/jvm -maxdepth 1 -mindepth 1 -type d | sort -r | head -1`; fi
 
     if [ ! -d "$JAVA_HOME" ]; then
         "Can't find JAVA_HOME"
