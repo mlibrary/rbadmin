@@ -112,6 +112,7 @@ source `dirname $0`/../lib/info.sh
 
 if [ ! $NO_JRUBY ]; then
     install_ruby $CURRENT_JRUBY_UPSTREAM
+    rbenv alias `echo $CURRENT_JRUBY_UPSTREAM | sed -e 's/\.[0-9]\.[0-9]$//g'` --auto
 fi
 
 if [ ! $NO_CRUBY ]; then
