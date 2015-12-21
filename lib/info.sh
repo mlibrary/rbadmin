@@ -1,6 +1,7 @@
 SORT="sort"
 HEAD="head"
-if which -s gsort; then
+
+if [ "$OS" == "X" ]; then
     SORT="gsort"
     HEAD="ghead"
 fi

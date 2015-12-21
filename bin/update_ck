@@ -5,6 +5,8 @@ source `dirname $0`/rbenv_profile
 rbenv rehash > /dev/null
 rbenv update > /dev/null
 
+source `dirname $0`/../config
+source `dirname $0`/../lib/system.sh
 source `dirname $0`/../lib/info.sh
 
 function match_or_complain {
@@ -24,6 +26,3 @@ fi
 if [ ! $NO_CRUBY ]; then
     match_or_complain $CURRENT_CRUBY_UPSTREAM $CURRENT_CRUBY_INSTALLED
 fi
-
-
-

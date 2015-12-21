@@ -5,6 +5,8 @@ if [ "$UNAME" == "Darwin" ]; then
     export OS="X"
 elif [ "$DISTRO" == "Debian" ]; then
     export OS="Debian"
+elif [ "$DISTRO" == "RedHatEnterpriseServer" ]; then
+    export OS="EL"
 else
     echo "Sorry, your OS is not yet supported. Feel free to submit a pull request."
     exit 1

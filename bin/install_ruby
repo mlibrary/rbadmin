@@ -1,13 +1,13 @@
 #!/bin/bash
 
-. `dirname $0`/../lib/system.sh
+source `dirname $0`/../config
+source `dirname $0`/../lib/system.sh
 
 set -e
 
-. `dirname $0`/../config
-export PREFIX="/l/local"
+PREFIX="/l/local"
 export RBENV_ROOT="$PREFIX/rbenv"
-export PATH="$RBENV_ROOT/bin:$RBENV_ROOT/shims:${PATH}"
+export PATH="$RBENV_ROOT/bin:$RBENV_ROOT/shims:$PATH"
 
 function clone {
     [ -d $1 ] && [ "$(ls -A $1)" ] && echo "$1 already present" || git clone $2
@@ -46,10 +46,7 @@ function check_package {
 
     for p in ${arr[@]}
     do
-        dpkg -s $p >/dev/null 2>&1
-
-        if [ $? -eq 0 ];
-        then
+        if (dpkg -s $p >/dev/null 2>&1); then
             echo "OK $p found"
             return
         fi
@@ -95,7 +92,6 @@ popd
 rbenv update
 
 source `dirname $0`/../lib/info.sh
-echo "not ded 2"
 
 # install ruby versions
 
