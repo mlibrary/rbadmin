@@ -56,14 +56,26 @@ function check_package {
     exit 1
 }
 
+function check_yum {
+        if (yum list installed $1 >/dev/null 2>&1); then
+            echo "OK $1 found"
+            return
+        fi
+
+    echo "FAILURE, package not found: $1"
+    exit 1
+}
+
 if [ ! $NO_JRUBY ]; then
     if [ "$OS" == "X" ];      then export JAVA_HOME=`/usr/libexec/java_home`; fi
-    if [ "$OS" == "Debian" ]; then export JAVA_HOME=`find /usr/lib/jvm -maxdepth 1 -mindepth 1 -type d | sort -r | head -1`; fi
+    if [ "$OS" == "EL" -o "$OS" == "Debian" ]; then export JAVA_HOME=`find /usr/lib/jvm -maxdepth 1 -mindepth 1 -type d | sort -r | head -1`; fi
 
     if [ ! -d "$JAVA_HOME" ]; then
-        "Can't find JAVA_HOME"
+        echo "Can't find JAVA_HOME"
         exit 1
     fi
+
+    export PATH="${JAVA_HOME}/bin:$PATH"
 fi
 
 if [ "$OS" == "Debian" ]; then
@@ -72,19 +84,24 @@ if [ "$OS" == "Debian" ]; then
     check_package "g++"
 fi
 
+if [ "$OS" == "EL" ]; then
+    check_yum readline-devel 
+    check_yum openssl-devel
+fi
+
 # install rbenv
-pushd $PREFIX
+pushd $PREFIX >/dev/null
 clone rbenv https://github.com/sstephenson/rbenv.git
 
 # install plugins
 cd $RBENV_ROOT
 _mkdir plugins
-pushd plugins
+pushd plugins >/dev/null
 clone ruby-build https://github.com/sstephenson/ruby-build.git
 clone rbenv-update https://github.com/rkh/rbenv-update.git
 clone rbenv-aliases https://github.com/tpope/rbenv-aliases.git
-popd
-popd
+popd >/dev/null
+popd >/dev/null
 
 # up to date?
 rbenv update

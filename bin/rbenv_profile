@@ -12,5 +12,5 @@ if ( rbenv versions --bare | grep '^jruby' > /dev/null ); then
 		# Debian and EL
 		export JAVA_HOME=`find /usr/lib/jvm -maxdepth 1 -mindepth 1 -type d | sort -r | head -1`
 	fi
-  export PATH="$JAVA_HOME:$PATH"
+  export PATH="${JAVA_HOME}/bin:$PATH"
 fi 
