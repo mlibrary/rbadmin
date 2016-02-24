@@ -82,6 +82,7 @@ if [ "$OS" == "Debian" ]; then
     check_package libssl-dev
     check_package libreadline-dev
     check_package "g++"
+    check_package "make"
 fi
 
 if [ "$OS" == "EL" ]; then
@@ -124,6 +125,8 @@ if [ $DEFAULT_TO_JRUBY ]; then
 else
     rbenv global $CURRENT_CRUBY_UPSTREAM
 fi
+
+source `dirname $0`/../lib/info.sh
 
 # remove outdated ruby versions
 for v in "${OUTDATED_CRUBIES[@]}" "${OUTDATED_JRUBIES[@]}"; do
